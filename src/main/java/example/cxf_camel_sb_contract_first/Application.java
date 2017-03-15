@@ -1,7 +1,7 @@
 
 package example.cxf_camel_sb_contract_first;
 
-import org.apache.camel.component.servlet.CamelHttpTransportServlet;
+//import org.apache.camel.component.servlet.CamelHttpTransportServlet;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,6 +23,7 @@ import org.springframework.context.annotation.Bean;
 /**
  * A spring-boot application that includes a Camel route builder to setup the Camel routes
  */
+
 @SpringBootApplication
 @ImportResource({"classpath:spring/camel-context.xml"})
 
