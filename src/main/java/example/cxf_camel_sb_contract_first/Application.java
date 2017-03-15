@@ -1,7 +1,7 @@
 
 package example.cxf_camel_sb_contract_first;
 
-//import org.apache.camel.component.servlet.CamelHttpTransportServlet;
+import org.apache.camel.component.servlet.CamelHttpTransportServlet;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,6 +25,8 @@ import org.springframework.context.annotation.Bean;
  */
 @SpringBootApplication
 @ImportResource({"classpath:spring/camel-context.xml"})
+
+
 /*
 public class Application extends RouteBuilder {
 
@@ -43,7 +45,7 @@ public class Application extends RouteBuilder {
 
 */
 
-public class Application {
+public class Application extends RouteBuilder{
 
     /**
      * A main method to start this application.
@@ -64,6 +66,12 @@ public class Application {
 	@ConfigurationProperties(prefix = "spring.dsFis2")
 	public DataSource mysqlDataSource() {
 		return DataSourceBuilder.create().build();
+	}
+
+	@Override
+	public void configure() throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
     
 }
