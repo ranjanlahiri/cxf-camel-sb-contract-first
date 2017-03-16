@@ -16,16 +16,19 @@
     <!-- configure the versions you want to use here -->
     <fabric8.version>2.2.170.redhat-000010</fabric8.version>
     <spring-boot.version>1.4.1.RELEASE</spring-boot.version>
+	
+	<!-- start -->    
+    <!-- <java.version>1.8</java.version> -->
+	<cxf.version>3.1.5.redhat-630224</cxf.version>
+	<build-helper.version>3.0.0</build-helper.version>
+    
+    <!-- End -->
 
     <!-- maven plugin versions -->
     <fabric8.maven.plugin.version>3.1.80.redhat-000010</fabric8.maven.plugin.version>
     <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
     <maven-surefire-plugin.version>2.18.1</maven-surefire-plugin.version>
-	<!-- start -->    
-    <java.version>1.8</java.version>
-	<cxf.version>3.1.6</cxf.version>
-    
-    <!-- End -->
+	
   </properties>
 
   <dependencyManagement>
@@ -43,23 +46,7 @@
   <dependencies>
 
     <!-- Enabling health checks -->
-    
-    <!-- 
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-actuator</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
  
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-spring-boot-starter</artifactId>
-    </dependency>
-    -->
-    
   <!-- Added -->  
     <dependency>
       <groupId>javax.inject</groupId>
@@ -167,100 +154,32 @@
 
   <build>
     
-    
-<!--     
     <defaultGoal>spring-boot:run</defaultGoal>
-
-    <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>${maven-compiler-plugin.version}</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
-      
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>${maven-surefire-plugin.version}</version>
-        <inherited>true</inherited>
-        <configuration>
-          <excludes>
-            <exclude>**/*KT.java</exclude>
-          </excludes>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>${spring-boot.version}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>repackage</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>io.fabric8</groupId>
-        <artifactId>fabric8-maven-plugin</artifactId>
-        <version>${fabric8.maven.plugin.version}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>resource</goal>
-              <goal>build</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-     -->
-	<defaultGoal>install</defaultGoal>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<configuration>
-						<source>1.8</source>
-						<target>1.8</target>
-					</configuration>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.camel</groupId>
-					<artifactId>camel-maven-plugin</artifactId>
-					<version>${camel.version}</version>
-				</plugin>
-
-			</plugins>
-		</pluginManagement>
-		<plugins>
+ 		<plugins>
+ 			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			
 			<plugin>
 				<groupId>org.apache.cxf</groupId>
 				<artifactId>cxf-codegen-plugin</artifactId>
-				<version>3.1.4</version>
+				<version>${cxf.version}</version>
 				<executions>
 					<execution>
 						<id>generate-sources</id>
 						<phase>generate-sources</phase>
 						<configuration>
-							<!-- <sourceRoot>${basedir}/org/jboss/fis2/demo/soap/</sourceRoot> -->
 							<wsdlOptions>
 								<wsdlOption>
 									<wsdl>src/main/resources/META-INF/wsdl/employee.wsdl</wsdl>
 									<frontEnd>jaxws21</frontEnd>
 									<faultSerialVersionUID>1</faultSerialVersionUID>
-									<!-- 
-									<bindingFiles>
-										<bindingFile>src/main/resources/binding.xml</bindingFile>
-									</bindingFiles>
-								 -->
+									<serviceName>EmployeeWS</serviceName>
 								</wsdlOption>
 							</wsdlOptions>
 						</configuration>
@@ -270,6 +189,41 @@
 					</execution>
 				</executions>
 			</plugin>
+			
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>${build-helper.version}</version>
+				<executions>
+					<execution>
+						<id>add-sources</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${project.build.directory}/generated-sources/cxf</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${maven-surefire-plugin.version}</version>
+				<inherited>true</inherited>
+				<configuration>
+					<excludes>
+						<exclude>**/*KT.java</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			
+			
+			
 
 			<!-- Spring Boot plugin -->
 			<plugin>
@@ -282,14 +236,24 @@
 							<goal>repackage</goal>
 						</goals>
 					</execution>
-				</executions>
-				<!-- <configuration> -->
-				<!-- <jvmArguments> -->
-				<!-- -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005 -->
-				<!-- </jvmArguments> -->
-				<!-- </configuration> -->
+				</executions>			
 			</plugin>
+			
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>fabric8-maven-plugin</artifactId>
+				<version>${fabric8.maven.plugin.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>resource</goal>
+							<goal>build</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			
 		</plugins>
-		<finalName>wsdl_first</finalName>   
+		   
   </build>
 </project>
